@@ -97,6 +97,12 @@ html {
   scroll-padding-top: 96px;
 }
 
+/* Mobile only: scale typography down ~14% so headings/body fit phone screens
+   better. Desktop (>=768px) keeps the default 16px root. */
+@media (max-width: 767px) {
+  html { font-size: 14px; }
+}
+
 body {
   background: var(--color-background);
   color: var(--color-on-background);

@@ -143,39 +143,37 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Tap-anywhere overlay — closes the menu on outside touch */}
-      <div
-        aria-hidden="true"
-        onClick={() => setOpen(false)}
-        className={`md:hidden fixed inset-0 top-16 bg-black/30 z-40 transition-opacity duration-200 ${
-          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-      />
-      <div
-        className={`md:hidden border-t border-surface-container-high bg-surface px-gutter overflow-hidden transition-[max-height,opacity,padding] duration-300 ease-out ${
-          open ? "max-h-[600px] opacity-100 py-4" : "max-h-0 opacity-0 py-0"
-        }`}
-      >
-        <nav className="flex flex-col gap-3">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="py-2 hover:text-primary"
-            >
-              {l.label}
-            </a>
-          ))}
-          <a
+      {open && (
+        <>
+          {/* Tap-anywhere overlay — closes the menu on outside touch */}
+          <div
+            aria-hidden="true"
             onClick={() => setOpen(false)}
-            className="mt-2 inline-flex items-center justify-center px-6 py-3 bg-orange-600 text-white text-sm font-bold tracking-wider uppercase rounded-full shadow-lg shadow-orange-600/40 active:translate-y-0.5 active:shadow-md transition-all"
-            href="#quote"
-          >
-            Get a Quote
-          </a>
-        </nav>
-      </div>
+            className="md:hidden fixed inset-0 top-[64px] bg-black/30 z-40"
+          />
+          <div className="md:hidden relative z-50 border-t border-surface-container-high bg-surface px-gutter py-4 shadow-lg">
+            <nav className="flex flex-col gap-3">
+              {links.map((l) => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className="py-3 text-base text-on-surface hover:text-primary"
+                >
+                  {l.label}
+                </a>
+              ))}
+              <a
+                onClick={() => setOpen(false)}
+                className="mt-2 inline-flex items-center justify-center px-6 py-3 bg-orange-600 text-white text-sm font-bold tracking-wider uppercase rounded-full shadow-lg shadow-orange-600/40 active:translate-y-0.5 active:shadow-md transition-all"
+                href="#quote"
+              >
+                Get a Quote
+              </a>
+            </nav>
+          </div>
+        </>
+      )}
     </header>
   );
 }
