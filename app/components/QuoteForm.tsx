@@ -1,23 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+
+const TO_EMAIL = "blazetech.dev@gmail.com";
+
+type Status =
+  | { kind: "idle" }
+  | { kind: "opening"; messageText: string }
+  | { kind: "success" }
+  | { kind: "fallback"; messageText: string; copied: boolean };
 
 export default function QuoteForm() {
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const fallbackTimer = useRef<number | null>(null);
+
+  function buildMessageText(data: FormData) {
+    return (
+      `Name: ${data.get("name")}\n` +
+      `Email: ${data.get("email")}\n` +
+      `Phone: ${data.get("phone") || ""}\n` +
+      `Monthly bill: ${data.get("bill")}\n\n` +
+      (data.get("message") || "")
+    );
+  }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
+    const messageText = buildMessageText(data);
     const subject = encodeURIComponent("Solar quote request from " + (data.get("name") || "website"));
-    const body = encodeURIComponent(
-      `Name: ${data.get("name")}\n` +
-        `Email: ${data.get("email")}\n` +
-        `Phone: ${data.get("phone") || ""}\n` +
-        `Monthly bill: ${data.get("bill")}\n\n` +
-        (data.get("message") || "")
-    );
-    setStatus("Opening your email app… if nothing happens, write us directly at blazetech.dev@gmail.com.");
-    window.location.href = `mailto:blazetech.dev@gmail.com?subject=${subject}&body=${body}`;
+    const body = encodeURIComponent(messageText);
+
+    setStatus({ kind: "opening", messageText });
+
+    // If a mail handler exists, the page loses focus / becomes hidden once
+    // it opens. If neither happens within ~1.5s, assume mailto failed and
+    // surface a copy-paste fallback so the inquiry isn't lost.
+    if (fallbackTimer.current) window.clearTimeout(fallbackTimer.current);
+    const onAway = () => {
+      if (fallbackTimer.current) window.clearTimeout(fallbackTimer.current);
+      fallbackTimer.current = null;
+      setStatus({ kind: "success" });
+      window.removeEventListener("blur", onAway);
+      document.removeEventListener("visibilitychange", onAway);
+    };
+    window.addEventListener("blur", onAway, { once: true });
+    document.addEventListener("visibilitychange", onAway, { once: true });
+    fallbackTimer.current = window.setTimeout(() => {
+      window.removeEventListener("blur", onAway);
+      document.removeEventListener("visibilitychange", onAway);
+      setStatus({ kind: "fallback", messageText, copied: false });
+    }, 1500);
+
+    window.location.href = `mailto:${TO_EMAIL}?subject=${subject}&body=${body}`;
+  }
+
+  async function copyFallback(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setStatus({ kind: "fallback", messageText: text, copied: true });
+    } catch {
+      // Clipboard API can fail on http or restricted contexts — fall through.
+    }
   }
 
   const inputCls =
@@ -27,6 +71,9 @@ export default function QuoteForm() {
   return (
     <form
       onSubmit={onSubmit}
+      action={`mailto:${TO_EMAIL}`}
+      method="post"
+      encType="text/plain"
       className="fade-up bg-surface rounded-xl p-8 shadow-sm border border-surface-container-high flex flex-col gap-stack-md"
     >
       <div>
@@ -68,7 +115,46 @@ export default function QuoteForm() {
       >
         Send Inquiry <span className="material-symbols-outlined text-xl">arrow_forward</span>
       </button>
-      {status && <p className="text-sm text-on-surface-variant">{status}</p>}
+
+      <div role="status" aria-live="polite" className="min-h-[1.5rem]">
+        {status.kind === "opening" && (
+          <p className="text-sm text-on-surface-variant">Opening your email app…</p>
+        )}
+        {status.kind === "success" && (
+          <p className="text-sm text-emerald-700">Email app opened — finish sending and we&apos;ll reply within one business day.</p>
+        )}
+        {status.kind === "fallback" && (
+          <div className="rounded-lg border-2 border-orange-300 bg-orange-50 p-4 text-sm text-on-surface flex flex-col gap-3">
+            <p className="font-semibold text-orange-700">
+              Couldn&apos;t open an email app. Send the message yourself so it reaches us:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <a
+                href={`mailto:${TO_EMAIL}?subject=Solar%20quote%20request&body=${encodeURIComponent(status.messageText)}`}
+                className="inline-flex items-center gap-1.5 rounded-full bg-orange-600 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-orange-500"
+              >
+                <span className="material-symbols-outlined text-base">mail</span>
+                Email {TO_EMAIL}
+              </a>
+              <a
+                href="tel:+639604365857"
+                className="inline-flex items-center gap-1.5 rounded-full border-2 border-orange-600 px-4 py-2 text-xs font-bold uppercase tracking-wider text-orange-700 hover:bg-orange-100"
+              >
+                <span className="material-symbols-outlined text-base">call</span>
+                Call +63 960 436 5857
+              </a>
+              <button
+                type="button"
+                onClick={() => copyFallback(status.messageText)}
+                className="inline-flex items-center gap-1.5 rounded-full border-2 border-on-surface-variant/30 px-4 py-2 text-xs font-bold uppercase tracking-wider text-on-surface hover:border-primary"
+              >
+                <span className="material-symbols-outlined text-base">{status.copied ? "check" : "content_copy"}</span>
+                {status.copied ? "Copied" : "Copy message"}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </form>
   );
 }

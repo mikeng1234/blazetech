@@ -9,24 +9,32 @@ import Estimator from "./components/Estimator";
 import QuoteForm from "./components/QuoteForm";
 import ScrollParallax from "./components/ScrollParallax";
 import ProjectsCarousel from "./components/ProjectsCarousel";
+import SafeImage from "./components/SafeImage";
 
 export default function Home() {
   return (
     <>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-full focus:bg-orange-600 focus:text-white focus:font-bold focus:shadow-lg"
+      >
+        Skip to content
+      </a>
       <Header />
       <SmoothScroll />
       <RevealOnScroll />
       <MessengerFab />
 
-      <main className="pt-20">
+      <main id="main" tabIndex={-1} className="pt-20 pb-24 md:pb-0 outline-none">
         {/* Hero */}
         <section
           id="home"
-          className="relative w-full min-h-[780px] md:min-h-[900px] flex items-start px-gutter py-section-padding bg-surface-container-lowest"
+          className="relative w-full min-h-[780px] md:min-h-[900px] flex items-start px-gutter py-section-padding bg-surface-container-lowest [overflow-x:clip]"
         >
           <div className="absolute inset-0 z-0">
             <HeroCover />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/45 via-background/20 to-transparent" />
+            {/* Stronger left-side scrim so headline/body copy meet WCAG AA contrast over any cover image */}
+            <div className="absolute inset-0 bg-gradient-to-r from-white/85 via-white/55 to-transparent lg:from-white/80 lg:via-white/35 lg:to-transparent" />
             {/* Top-to-transparent fade — extends up to the page top so it sits under the fixed header too */}
             <div className="absolute inset-x-0 -top-20 h-72 md:h-80 bg-gradient-to-b from-background/80 via-background/40 to-transparent" />
             {/* Bottom fade so the cover blends softly into the banner */}
@@ -34,13 +42,7 @@ export default function Home() {
           </div>
           <div className="relative z-10 max-w-(--container-max) mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center w-full">
             <div className="lg:col-span-7 flex flex-col items-start gap-stack-lg">
-              <span className="inline-flex self-start items-center gap-2 px-4 py-2 bg-secondary/10 text-secondary rounded-full border border-secondary/20 backdrop-blur-sm">
-                <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  bolt
-                </span>
-                <span className="text-sm font-bold uppercase tracking-wider whitespace-nowrap">Solar Engineering · Pampanga</span>
-              </span>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-on-surface tracking-tight leading-tight [text-shadow:0_0_14px_rgba(255,255,255,1),0_0_30px_rgba(255,255,255,1),0_0_48px_rgba(255,255,255,0.85),0_0_72px_rgba(255,255,255,0.6)]">
+              <h1 className="text-[clamp(2.25rem,9vw,4.5rem)] lg:text-7xl font-display font-bold text-on-surface tracking-tight leading-tight break-words [text-shadow:0_0_14px_rgba(255,255,255,1),0_0_30px_rgba(255,255,255,1),0_0_48px_rgba(255,255,255,0.85),0_0_72px_rgba(255,255,255,0.6)]">
                 <span className="fade-up block" style={{ transitionDelay: "100ms" }}>You Dream It,</span>
                 <span className="fade-up block text-orange-600" style={{ transitionDelay: "350ms" }}>We Build It.</span>
               </h1>
@@ -85,7 +87,7 @@ export default function Home() {
             aria-hidden="true"
             width={2752}
             height={1322}
-            priority
+            sizes="100vw"
             className="pointer-events-none absolute -bottom-[370px] md:-bottom-[370px] left-0 w-full h-auto z-20 select-none animate-bt-wipe"
           />
         </section>
@@ -97,7 +99,7 @@ export default function Home() {
         <div className="relative bg-surface overflow-hidden">
           <ScrollParallax
             speed={0.25}
-            className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner5c.png')] bg-no-repeat bg-[length:100%_auto] bg-[position:center_220px] md:bg-[position:center_320px] opacity-30"
+            className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner5c.png')] bg-no-repeat bg-[length:min(100%,1920px)_auto] bg-[position:center_220px] md:bg-[position:center_320px] opacity-30"
           >
             {null}
           </ScrollParallax>
@@ -135,7 +137,7 @@ export default function Home() {
         <div className="relative bg-surface overflow-hidden">
           <ScrollParallax
             speed={0.25}
-            className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner5e.png')] bg-no-repeat bg-[length:100%_auto] bg-[position:center_220px] md:bg-[position:center_320px] opacity-30"
+            className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner5e.png')] bg-no-repeat bg-[length:min(100%,1920px)_auto] bg-[position:center_220px] md:bg-[position:center_320px] opacity-30"
           >
             {null}
           </ScrollParallax>
@@ -184,6 +186,7 @@ export default function Home() {
                   aria-hidden="true"
                   width={2000}
                   height={547}
+                  sizes="100vw"
                   className="w-full h-auto"
                 />
               </div>
@@ -203,7 +206,7 @@ export default function Home() {
         <section id="quote" className="relative px-gutter py-section-padding bg-surface overflow-hidden">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner4.png')] bg-no-repeat bg-[length:100%_auto] bg-[position:center_220px] md:bg-[position:center_320px] opacity-30"
+            className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner4.png')] bg-no-repeat bg-[length:min(100%,1920px)_auto] bg-[position:center_220px] md:bg-[position:center_320px] opacity-30"
           />
           <div className="relative max-w-(--container-max) mx-auto grid grid-cols-1 lg:grid-cols-2 gap-margin items-start">
             <div className="fade-up" id="contact">
@@ -548,7 +551,7 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="fade-up flex flex-col bg-surface rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-surface-container-high">
       <div className="relative aspect-[4/3] overflow-hidden">
-        <Image
+        <SafeImage
           src={project.image}
           alt={`${project.name} — Blaze Tech installation`}
           fill

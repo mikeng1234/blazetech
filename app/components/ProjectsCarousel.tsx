@@ -9,13 +9,14 @@ type Props = {
 export default function ProjectsCarousel({ children }: Props) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const [index, setIndex] = useState(1);
-  const [translate, setTranslate] = useState(0);
-
   const firstIndex = children.length > 2 ? 1 : 0;
   const lastIndex = Math.max(firstIndex, children.length - 2);
+  const initialIndex = Math.min(children.length > 1 ? 1 : 0, lastIndex);
+  const [index, setIndex] = useState(initialIndex);
+  const [translate, setTranslate] = useState(0);
 
-  // Compute the translateX needed to center the active slide.
+  if (children.length === 0) return null;
+
   const updateTranslate = (i: number) => {
     const viewport = viewportRef.current;
     const track = trackRef.current;
@@ -41,7 +42,21 @@ export default function ProjectsCarousel({ children }: Props) {
   };
 
   return (
-    <div className="relative">
+    <div
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Recent projects"
+      onKeyDown={(e) => {
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          go(index - 1);
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault();
+          go(index + 1);
+        }
+      }}
+      className="relative"
+    >
       {/* Viewport (no scroll) */}
       <div ref={viewportRef} className="overflow-hidden">
         <div
@@ -52,16 +67,31 @@ export default function ProjectsCarousel({ children }: Props) {
             transition: "transform 600ms cubic-bezier(0.22, 1, 0.36, 1)",
           }}
         >
-          {children.map((slide, i) => (
-            <div
-              key={i}
-              className="shrink-0 w-[85%] sm:w-[55%] md:w-[40%] lg:w-[31%]"
-              aria-hidden={i !== index}
-            >
-              {slide}
-            </div>
-          ))}
+          {children.map((slide, i) => {
+            const inactive = i !== index;
+            return (
+              <div
+                key={i}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`Project ${i + 1} of ${children.length}`}
+                // `inert` removes from a11y tree AND blocks focus/clicks — preferred over aria-hidden,
+                // which leaves descendants tabbable and triggers axe violations.
+                inert={inactive}
+                className={`shrink-0 w-[85%] sm:w-[55%] md:w-[40%] lg:w-[31%] ${
+                  inactive ? "pointer-events-none" : ""
+                }`}
+              >
+                {slide}
+              </div>
+            );
+          })}
         </div>
+      </div>
+
+      {/* Live region announcing current slide for screen readers */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        Showing project {index + 1} of {children.length}
       </div>
 
       {/* Arrows */}
@@ -70,7 +100,7 @@ export default function ProjectsCarousel({ children }: Props) {
         aria-label="Previous project"
         onClick={() => go(index - 1)}
         disabled={index === firstIndex}
-        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 md:w-12 md:h-12 rounded-full bg-surface/95 backdrop-blur-sm shadow-lg shadow-black/15 border border-surface-container-high flex items-center justify-center text-on-surface hover:bg-surface hover:scale-105 disabled:opacity-0 disabled:pointer-events-none transition-all"
+        className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 md:w-12 md:h-12 rounded-full bg-surface/95 backdrop-blur-sm shadow-lg shadow-black/15 border border-surface-container-high flex items-center justify-center text-on-surface hover:bg-surface hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all"
       >
         <span className="material-symbols-outlined">chevron_left</span>
       </button>
@@ -79,7 +109,7 @@ export default function ProjectsCarousel({ children }: Props) {
         aria-label="Next project"
         onClick={() => go(index + 1)}
         disabled={index === lastIndex}
-        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 md:w-12 md:h-12 rounded-full bg-surface/95 backdrop-blur-sm shadow-lg shadow-black/15 border border-surface-container-high flex items-center justify-center text-on-surface hover:bg-surface hover:scale-105 disabled:opacity-0 disabled:pointer-events-none transition-all"
+        className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 md:w-12 md:h-12 rounded-full bg-surface/95 backdrop-blur-sm shadow-lg shadow-black/15 border border-surface-container-high flex items-center justify-center text-on-surface hover:bg-surface hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all"
       >
         <span className="material-symbols-outlined">chevron_right</span>
       </button>

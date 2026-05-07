@@ -1,4 +1,5 @@
 import Image from "next/image";
+import SafeImage from "./SafeImage";
 import ScrollParallax from "./ScrollParallax";
 
 const partners = [
@@ -52,13 +53,13 @@ export default function PartnerMarquee() {
         </div>
 
         <div className="bt-marquee-mask overflow-hidden">
-          <div className="flex animate-bt-marquee gap-12 md:gap-16">
+          <div className="flex bt-scroll-x gap-12 md:gap-16">
             {loop.map((p, i) => (
               <div
                 key={`${p.alt}-${i}`}
                 className="flex items-center justify-center shrink-0 h-16 md:h-20 w-40 md:w-48"
               >
-                <Image
+                <SafeImage
                   src={p.src}
                   alt={p.alt}
                   width={200}

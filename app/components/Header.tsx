@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const links = [
   { href: "#home", label: "Home" },
@@ -18,12 +18,30 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  const scrolledRef = useRef(false);
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => {
+      const next = window.scrollY > 24;
+      // Skip the React update when the threshold hasn't actually flipped — every
+      // scroll event would otherwise call setState and re-render the SVG-heavy header.
+      if (next === scrolledRef.current) return;
+      scrolledRef.current = next;
+      setScrolled(next);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Close the mobile menu on Escape so keyboard users have an exit.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
   const logoSize = scrolled ? "h-9 w-9" : "h-12 w-12";
   const rowPadding = scrolled ? "py-1.5" : "py-3";
@@ -31,16 +49,18 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md transition-shadow duration-200 overflow-hidden ${
+      className={`fixed top-0 left-0 w-full z-50 bg-surface/90 transition-shadow duration-200 ${
         scrolled ? "shadow-md" : "shadow-sm"
       }`}
     >
-      {/* Decorative geometric pattern (full width) */}
+      {/* Decorative geometric pattern — clipped to its own container so the
+          mobile menu (sibling) is free to expand outside the header bounds. */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
       <svg
         aria-hidden="true"
         viewBox="0 0 600 200"
         preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-0 w-full h-full opacity-80"
+        className="absolute inset-0 w-full h-full opacity-80"
       >
         <defs>
           <linearGradient id="bt-red" x1="0" y1="1" x2="1" y2="0">
@@ -67,7 +87,8 @@ export default function Header() {
         <path d="M-20,200 C 20,190 70,165 140,150 C 200,140 260,138 320,140 L 320,200 Z" fill="url(#bt-blue)" />
       </svg>
       {/* Frosted veil so content stays readable over the pattern */}
-      <div className="pointer-events-none absolute inset-0 bg-surface/75 backdrop-blur-md" />
+      <div className="absolute inset-0 bg-surface/75 backdrop-blur-md" />
+      </div>
 
       <div
         className={`relative flex justify-between items-center px-gutter max-w-(--container-max) mx-auto transition-all duration-200 ${rowPadding}`}
@@ -122,29 +143,39 @@ export default function Header() {
         </button>
       </div>
 
-      {open && (
-        <div className="md:hidden border-t border-surface-container-high bg-surface px-gutter py-4">
-          <nav className="flex flex-col gap-3">
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="py-2 hover:text-primary"
-              >
-                {l.label}
-              </a>
-            ))}
+      {/* Tap-anywhere overlay — closes the menu on outside touch */}
+      <div
+        aria-hidden="true"
+        onClick={() => setOpen(false)}
+        className={`md:hidden fixed inset-0 top-16 bg-black/30 z-40 transition-opacity duration-200 ${
+          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      />
+      <div
+        className={`md:hidden border-t border-surface-container-high bg-surface px-gutter overflow-hidden transition-[max-height,opacity,padding] duration-300 ease-out ${
+          open ? "max-h-[600px] opacity-100 py-4" : "max-h-0 opacity-0 py-0"
+        }`}
+      >
+        <nav className="flex flex-col gap-3">
+          {links.map((l) => (
             <a
+              key={l.href}
+              href={l.href}
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex items-center justify-center px-6 py-3 bg-orange-600 text-white text-sm font-bold tracking-wider uppercase rounded-full shadow-lg shadow-orange-600/40 active:translate-y-0.5 active:shadow-md transition-all"
-              href="#quote"
+              className="py-2 hover:text-primary"
             >
-              Get a Quote
+              {l.label}
             </a>
-          </nav>
-        </div>
-      )}
+          ))}
+          <a
+            onClick={() => setOpen(false)}
+            className="mt-2 inline-flex items-center justify-center px-6 py-3 bg-orange-600 text-white text-sm font-bold tracking-wider uppercase rounded-full shadow-lg shadow-orange-600/40 active:translate-y-0.5 active:shadow-md transition-all"
+            href="#quote"
+          >
+            Get a Quote
+          </a>
+        </nav>
+      </div>
     </header>
   );
 }

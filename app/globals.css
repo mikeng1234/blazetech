@@ -14,7 +14,8 @@
   --color-surface-variant: #e1e3e4;
   --color-surface-tint: #b12d00;
   --color-on-surface: #191c1d;
-  --color-on-surface-variant: #5d4038;
+  /* Darkened from #5d4038 for WCAG AA contrast on small text against light surfaces */
+  --color-on-surface-variant: #4a2f28;
   --color-inverse-surface: #2e3132;
   --color-inverse-on-surface: #f0f1f2;
 
@@ -307,14 +308,17 @@ body {
 
 .bt-card-lift,
 .bt-stat-card {
-  transform: translateY(0);
   transition:
     transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 450ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, box-shadow;
 }
-.bt-card-lift:hover,
-.bt-stat-card:hover {
+/* Use .visible (added after fade-up reveal) so the hover lift doesn't fight
+   .fade-up's initial translateY(24px) state. */
+.fade-up.bt-card-lift.visible:hover,
+.fade-up.bt-stat-card.visible:hover,
+.bt-card-lift:not(.fade-up):hover,
+.bt-stat-card:not(.fade-up):hover {
   transform: translateY(-12px);
   box-shadow:
     0 12px 20px -8px rgba(0, 0, 0, 0.18),
@@ -370,6 +374,21 @@ body {
   cursor: pointer;
 }
 .bt-fire-slider:focus { outline: none; }
+/* Visible keyboard focus ring on the thumb (focus-visible only — mouse clicks stay clean) */
+.bt-fire-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.95),
+    0 0 0 7px #1f7a8c,
+    0 0 22px 6px rgba(255, 168, 64, 0.7),
+    0 4px 8px rgba(0, 0, 0, 0.22);
+}
+.bt-fire-slider:focus-visible::-moz-range-thumb {
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.95),
+    0 0 0 7px #1f7a8c,
+    0 0 22px 6px rgba(255, 168, 64, 0.7),
+    0 4px 8px rgba(0, 0, 0, 0.22);
+}
 
 .bt-fire-slider::-webkit-slider-runnable-track {
   height: 6px;
@@ -431,15 +450,17 @@ body {
     0 6px 12px rgba(0, 0, 0, 0.22);
 }
 
-@keyframes bt-marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+@keyframes bt-scroll-x {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
-.animate-bt-marquee {
-  animation: bt-marquee 35s linear infinite;
+.bt-scroll-x {
+  animation: bt-scroll-x 35s linear infinite;
   width: max-content;
+  will-change: transform;
 }
 .bt-marquee-mask {
   -webkit-mask-image: linear-gradient(to right, transparent, black 18%, black 82%, transparent);
           mask-image: linear-gradient(to right, transparent, black 18%, black 82%, transparent);
 }
+

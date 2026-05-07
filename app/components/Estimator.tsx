@@ -95,7 +95,13 @@ export default function Estimator() {
   const [mode, setMode] = useState<Mode>("bill");
   const [bill, setBill] = useState(8000);
   const [kwh, setKwh] = useState(700);
-  const [rate, setRate] = useState<number>(DEFAULT_RATE);
+  // Stored as a string so the user can transiently clear or edit the field
+  // without the displayed value desyncing from a NaN number.
+  const [rateText, setRateText] = useState<string>(String(DEFAULT_RATE));
+  const rate = (() => {
+    const n = Number(rateText);
+    return Number.isFinite(n) ? n : DEFAULT_RATE;
+  })();
   const [system, setSystem] = useState<SystemType>("grid-tie");
 
   const sys = SYSTEM_TYPES[system];
@@ -176,7 +182,11 @@ export default function Estimator() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* Inputs */}
         <div className="fade-up lg:col-span-3 bg-surface-container-low rounded-xl p-5 border border-surface-container-high shadow-sm">
-          <div className="relative inline-grid grid-cols-2 items-center p-1 bg-surface-container-high rounded-full mb-5" role="tablist">
+          <div
+            role="group"
+            aria-label="Estimator input mode"
+            className="relative inline-grid grid-cols-2 items-center p-1 bg-surface-container-high rounded-full mb-5"
+          >
             {/* Sliding indicator */}
             <span
               aria-hidden="true"
@@ -185,8 +195,7 @@ export default function Estimator() {
             />
             <button
               type="button"
-              role="tab"
-              aria-selected={mode === "bill"}
+              aria-pressed={mode === "bill"}
               onClick={() => setMode("bill")}
               className={`${tabBase} relative z-10 ${mode === "bill" ? "text-on-primary" : "text-on-surface-variant hover:text-on-surface"}`}
             >
@@ -194,8 +203,7 @@ export default function Estimator() {
             </button>
             <button
               type="button"
-              role="tab"
-              aria-selected={mode === "kwh"}
+              aria-pressed={mode === "kwh"}
               onClick={() => setMode("kwh")}
               className={`${tabBase} relative z-10 ${mode === "kwh" ? "text-on-primary" : "text-on-surface-variant hover:text-on-surface"}`}
             >
@@ -221,6 +229,8 @@ export default function Estimator() {
                 max={50000}
                 step={500}
                 value={bill}
+                aria-valuetext={`₱${fmt(bill)}`}
+                aria-describedby="estimatorResults"
                 onChange={(e) => setBill(Number(e.target.value))}
                 className="bt-fire-slider w-full"
               />
@@ -247,6 +257,8 @@ export default function Estimator() {
                 max={5000}
                 step={50}
                 value={kwh}
+                aria-valuetext={`${fmt(kwh)} kilowatt-hours`}
+                aria-describedby="estimatorResults"
                 onChange={(e) => setKwh(Number(e.target.value))}
                 className="bt-fire-slider w-full"
               />
@@ -271,14 +283,20 @@ export default function Estimator() {
                   min={1}
                   max={30}
                   step={0.01}
-                  value={rate}
-                  onChange={(e) => setRate(Number(e.target.value))}
+                  value={rateText}
+                  onChange={(e) => setRateText(e.target.value)}
+                  onBlur={(e) => {
+                    const n = Number(e.target.value);
+                    if (!Number.isFinite(n) || n < 1) setRateText(String(DEFAULT_RATE));
+                    else if (n > 30) setRateText("30");
+                    else setRateText(String(n));
+                  }}
                   className="w-full pl-7 py-2 rounded-lg border-2 border-on-surface-variant/25 bg-surface-container-lowest hover:border-primary/40 hover:bg-surface focus:border-primary focus:bg-surface focus:ring-4 focus:ring-primary/20 outline-none transition-all duration-200"
                 />
               </div>
               <button
                 type="button"
-                onClick={() => setRate(DEFAULT_RATE)}
+                onClick={() => setRateText(String(DEFAULT_RATE))}
                 className="text-sm font-bold uppercase tracking-wider text-secondary hover:underline"
               >
                 Reset default
@@ -292,7 +310,11 @@ export default function Estimator() {
         </div>
 
         {/* Results */}
-        <div className="fade-up lg:col-span-2 bg-primary text-on-primary rounded-xl p-5 shadow-md flex flex-col gap-3">
+        <div
+          id="estimatorResults"
+          aria-live="polite"
+          className="fade-up lg:col-span-2 bg-primary text-on-primary rounded-xl p-5 shadow-md flex flex-col gap-3"
+        >
           <div className="flex items-center justify-between">
             <div className="text-sm font-bold uppercase tracking-wider opacity-80">Estimated Installation Cost</div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-xs font-bold uppercase tracking-wider">
@@ -301,7 +323,7 @@ export default function Estimator() {
             </div>
           </div>
           <div className="text-2xl md:text-3xl font-display font-bold leading-tight">
-            ₱{fmtK(costLow)} – ₱{fmtK(costHigh)}
+            <span className="whitespace-nowrap">₱{fmtK(costLow)}</span> – <span className="whitespace-nowrap">₱{fmtK(costHigh)}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-3 mt-1 pt-3 border-t border-white/20">
