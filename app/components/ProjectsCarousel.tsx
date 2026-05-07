@@ -9,11 +9,30 @@ type Props = {
 export default function ProjectsCarousel({ children }: Props) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const firstIndex = children.length > 2 ? 1 : 0;
-  const lastIndex = Math.max(firstIndex, children.length - 2);
-  const initialIndex = Math.min(children.length > 1 ? 1 : 0, lastIndex);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+
+  // On mobile: first slide is the leftmost stop, last slide is the rightmost.
+  // On desktop: keep one-card peek on each side.
+  const firstIndex = isDesktop && children.length > 2 ? 1 : 0;
+  const lastIndex = isDesktop
+    ? Math.max(firstIndex, children.length - 2)
+    : Math.max(0, children.length - 1);
+  const initialIndex = Math.min(isDesktop && children.length > 1 ? 1 : 0, lastIndex);
   const [index, setIndex] = useState(initialIndex);
   const [translate, setTranslate] = useState(0);
+
+  // Re-clamp index when breakpoint flips so we never sit past lastIndex.
+  useEffect(() => {
+    setIndex((i) => Math.min(Math.max(i, firstIndex), lastIndex));
+  }, [firstIndex, lastIndex]);
 
   if (children.length === 0) return null;
 

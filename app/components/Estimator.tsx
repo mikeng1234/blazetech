@@ -132,7 +132,7 @@ export default function Estimator() {
           <span className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">System Type</span>
           <span className="text-xs text-on-surface-variant">Pricing varies by configuration</span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2 md:gap-3">
           {(Object.keys(SYSTEM_TYPES) as SystemType[]).map((key) => {
             const opt = SYSTEM_TYPES[key];
             const t = THEMES[opt.theme];
@@ -143,7 +143,7 @@ export default function Estimator() {
                 type="button"
                 onClick={() => setSystem(key)}
                 aria-pressed={active}
-                className={`text-left rounded-xl p-4 border-2 transition-all duration-200 cursor-pointer active:translate-y-0.5 ${
+                className={`text-left rounded-xl p-2 md:p-4 border-2 transition-all duration-200 cursor-pointer active:translate-y-0.5 ${
                   active
                     ? `${t.border} bg-surface shadow-lg ${t.shadow}`
                     : `border-surface-container-high bg-surface ${t.hoverBorder} hover:shadow-md`
@@ -157,15 +157,15 @@ export default function Estimator() {
                   >
                     <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>{opt.icon}</span>
                   </div>
-                  <div className="font-display font-semibold text-on-surface text-base">{opt.label}</div>
+                  <div className="font-display font-semibold text-on-surface text-xs md:text-base leading-tight">{opt.label}</div>
                   {active && (
                     <span className={`ml-auto material-symbols-outlined ${t.check}`} style={{ fontVariationSettings: "'FILL' 1", fontSize: "20px" }}>
                       check_circle
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-on-surface-variant mt-2">{opt.blurb}</p>
-                <ul className="mt-2 flex flex-col gap-1">
+                <p className="hidden md:block text-sm text-on-surface-variant mt-2">{opt.blurb}</p>
+                <ul className="mt-2 hidden md:flex flex-col gap-1">
                   {opt.pros.map((pro) => (
                     <li key={pro} className="flex items-start gap-2 text-sm text-on-surface">
                       <span className={`material-symbols-outlined text-base mt-0.5 ${t.iconText}`}>check</span>
@@ -177,15 +177,34 @@ export default function Estimator() {
             );
           })}
         </div>
+
+        {/* Mobile-only description panel for the active system type */}
+        <div className="md:hidden mt-2 rounded-lg border border-surface-container-high bg-surface px-2.5 py-2">
+          <div className="flex items-center gap-1.5">
+            <div className={`w-5 h-5 rounded-md flex items-center justify-center ${THEMES[sys.theme].iconBgActive} ${THEMES[sys.theme].iconTextActive}`}>
+              <span className="material-symbols-outlined" style={{ fontSize: "12px" }}>{sys.icon}</span>
+            </div>
+            <div className="font-display font-semibold text-on-surface text-xs">{sys.label}</div>
+          </div>
+          <p className="text-[11px] text-on-surface-variant mt-1 leading-snug">{sys.blurb}</p>
+          <ul className="mt-1.5 flex flex-col gap-0.5">
+            {sys.pros.map((pro) => (
+              <li key={pro} className="flex items-center gap-1 text-[11px] text-on-surface">
+                <span className={`material-symbols-outlined text-xs ${THEMES[sys.theme].iconText}`}>check</span>
+                <span>{pro}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* Inputs */}
-        <div className="fade-up lg:col-span-3 bg-surface-container-low rounded-xl p-5 border border-surface-container-high shadow-sm">
+        <div className="fade-up lg:col-span-3 bg-surface-container-low rounded-xl p-3 md:p-5 border border-surface-container-high shadow-sm">
           <div
             role="group"
             aria-label="Estimator input mode"
-            className="relative inline-grid grid-cols-2 items-center p-1 bg-surface-container-high rounded-full mb-5"
+            className="relative inline-grid grid-cols-2 items-center p-1 bg-surface-container-high rounded-full mb-3 md:mb-5"
           >
             {/* Sliding indicator */}
             <span
@@ -212,9 +231,9 @@ export default function Estimator() {
           </div>
 
           {mode === "bill" ? (
-            <div className="flex flex-col gap-stack-md">
+            <div className="flex flex-col gap-2 md:gap-stack-md">
               <div className="flex items-baseline justify-between">
-                <label htmlFor="billSlider" className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">
+                <label htmlFor="billSlider" className="text-xs md:text-sm font-bold uppercase tracking-wider text-on-surface-variant">
                   Monthly Electricity Bill
                 </label>
                 <div className="text-xl md:text-2xl font-display font-semibold text-primary">
@@ -240,9 +259,9 @@ export default function Estimator() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col gap-stack-md">
+            <div className="flex flex-col gap-2 md:gap-stack-md">
               <div className="flex items-baseline justify-between">
-                <label htmlFor="kwhSlider" className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">
+                <label htmlFor="kwhSlider" className="text-xs md:text-sm font-bold uppercase tracking-wider text-on-surface-variant">
                   Monthly Consumption
                 </label>
                 <div className="text-xl md:text-2xl font-display font-semibold text-primary">
@@ -270,11 +289,11 @@ export default function Estimator() {
           )}
 
           {mode === "bill" && (
-          <div className="mt-5 pt-4 border-t border-surface-container-high">
-            <label htmlFor="rate" className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">
+          <div className="mt-3 pt-3 md:mt-5 md:pt-4 border-t border-surface-container-high">
+            <label htmlFor="rate" className="text-xs md:text-sm font-bold uppercase tracking-wider text-on-surface-variant">
               Price per kWh (PHP)
             </label>
-            <div className="mt-2 flex items-center gap-3">
+            <div className="mt-2 flex items-center gap-2 md:gap-3">
               <div className="relative w-28">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">₱</span>
                 <input
@@ -297,12 +316,12 @@ export default function Estimator() {
               <button
                 type="button"
                 onClick={() => setRateText(String(DEFAULT_RATE))}
-                className="text-sm font-bold uppercase tracking-wider text-secondary hover:underline"
+                className="text-xs md:text-sm font-bold uppercase tracking-wider text-secondary hover:underline"
               >
                 Reset default
               </button>
             </div>
-            <p className="text-xs text-on-surface-variant mt-2">
+            <p className="text-[10px] md:text-xs text-on-surface-variant mt-1.5 md:mt-2 leading-snug">
               Default reflects a typical Meralco residential rate. Adjust to match your latest bill for an accurate estimate.
             </p>
           </div>
@@ -313,20 +332,20 @@ export default function Estimator() {
         <div
           id="estimatorResults"
           aria-live="polite"
-          className="fade-up lg:col-span-2 bg-primary text-on-primary rounded-xl p-5 shadow-md flex flex-col gap-3"
+          className="fade-up lg:col-span-2 bg-primary text-on-primary rounded-xl p-3 md:p-5 shadow-md flex flex-col gap-2 md:gap-3"
         >
-          <div className="flex items-center justify-between">
-            <div className="text-sm font-bold uppercase tracking-wider opacity-80">Estimated Installation Cost</div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-xs font-bold uppercase tracking-wider">
-              <span className="material-symbols-outlined text-sm">{sys.icon}</span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-[11px] md:text-sm font-bold uppercase tracking-wider opacity-80 leading-tight">Estimated Installation Cost</div>
+            <div className="inline-flex items-center gap-1 md:gap-1.5 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-white/15 text-[10px] md:text-xs font-bold uppercase tracking-wider">
+              <span className="material-symbols-outlined text-xs md:text-sm">{sys.icon}</span>
               {sys.label}
             </div>
           </div>
-          <div className="text-2xl md:text-3xl font-display font-bold leading-tight">
+          <div className="text-lg md:text-3xl font-display font-bold leading-tight">
             <span className="whitespace-nowrap">₱{fmtK(costLow)}</span> – <span className="whitespace-nowrap">₱{fmtK(costHigh)}</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mt-1 pt-3 border-t border-white/20">
+          <div className="grid grid-cols-2 gap-1.5 md:gap-3 mt-0.5 md:mt-1 pt-2 md:pt-3 border-t border-white/20">
             <Stat label="System Size" value={`${fmt1(systemKwp)} kWp`} />
             <Stat label="Daily Output" value={`~${fmt(dailyKwh)} kWh`} />
             <Stat label="Monthly Savings" value={`₱${fmt(monthlySavings)}`} />
@@ -335,12 +354,12 @@ export default function Estimator() {
 
           <a
             href="#quote"
-            className="mt-auto inline-flex items-center justify-center gap-2 px-5 py-3 bg-on-primary text-primary text-sm font-bold uppercase tracking-wider rounded-full hover:bg-white transition-all duration-200 shadow-xl shadow-black/25 hover:shadow-2xl hover:shadow-black/35 hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-md"
+            className="mt-auto inline-flex items-center justify-center gap-2 px-4 py-2 text-xs md:px-5 md:py-3 md:text-sm bg-on-primary text-primary font-bold uppercase tracking-wider rounded-full hover:bg-white transition-all duration-200 shadow-xl shadow-black/25 hover:shadow-2xl hover:shadow-black/35 hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-md"
           >
             Request a Real Quote
-            <span className="material-symbols-outlined text-lg">arrow_forward</span>
+            <span className="material-symbols-outlined text-base md:text-lg">arrow_forward</span>
           </a>
-          <p className="text-xs opacity-80">Indicative only. Actual cost depends on roof type, hardware tier, and site conditions.</p>
+          <p className="text-[10px] md:text-xs opacity-80 leading-snug">Indicative only. Actual cost depends on roof type, hardware tier, and site conditions.</p>
         </div>
       </div>
     </div>
@@ -350,8 +369,8 @@ export default function Estimator() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="text-xs font-bold uppercase tracking-wider opacity-80">{label}</div>
-      <div className="text-base font-display font-semibold mt-0.5">{value}</div>
+      <div className="text-[10px] md:text-xs font-bold uppercase tracking-wider opacity-80 leading-tight">{label}</div>
+      <div className="text-sm md:text-base font-display font-semibold mt-0.5">{value}</div>
     </div>
   );
 }

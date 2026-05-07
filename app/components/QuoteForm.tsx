@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { notify } from "./ClickTracker";
 
 const TO_EMAIL = "blazetech.dev@gmail.com";
 
@@ -32,6 +33,14 @@ export default function QuoteForm() {
     const body = encodeURIComponent(messageText);
 
     setStatus({ kind: "opening", messageText });
+
+    notify("quote", {
+      name: String(data.get("name") ?? ""),
+      email: String(data.get("email") ?? ""),
+      phone: String(data.get("phone") ?? ""),
+      bill: String(data.get("bill") ?? ""),
+      message: String(data.get("message") ?? "").slice(0, 500),
+    });
 
     // If a mail handler exists, the page loses focus / becomes hidden once
     // it opens. If neither happens within ~1.5s, assume mailto failed and
@@ -65,8 +74,8 @@ export default function QuoteForm() {
   }
 
   const inputCls =
-    "mt-1 w-full rounded-lg border-2 border-on-surface-variant/25 bg-surface-container-lowest px-3.5 py-2.5 text-on-surface placeholder:text-on-surface-variant/60 hover:border-primary/40 hover:bg-surface focus:border-primary focus:bg-surface focus:ring-4 focus:ring-primary/20 outline-none transition-all duration-200";
-  const labelCls = "text-sm font-bold uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5";
+    "mt-1 w-full rounded-lg border-2 border-on-surface-variant/25 bg-surface-container-lowest px-2.5 py-1.5 text-sm md:px-3.5 md:py-2.5 md:text-base text-on-surface placeholder:text-on-surface-variant/60 hover:border-primary/40 hover:bg-surface focus:border-primary focus:bg-surface focus:ring-4 focus:ring-primary/20 outline-none transition-all duration-200";
+  const labelCls = "text-[11px] md:text-sm font-bold uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5";
 
   return (
     <form
@@ -74,13 +83,13 @@ export default function QuoteForm() {
       action={`mailto:${TO_EMAIL}`}
       method="post"
       encType="text/plain"
-      className="fade-up bg-surface rounded-xl p-8 shadow-sm border border-surface-container-high flex flex-col gap-stack-md"
+      className="fade-up bg-surface rounded-xl p-4 md:p-8 shadow-sm border border-surface-container-high flex flex-col gap-3 md:gap-stack-md"
     >
       <div>
         <label className={labelCls} htmlFor="name">Full Name</label>
         <input id="name" name="name" required type="text" className={inputCls} />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+      <div className="grid grid-cols-2 gap-3 md:gap-stack-md">
         <div>
           <label className={labelCls} htmlFor="email">Email</label>
           <input id="email" name="email" required type="email" className={inputCls} />
@@ -111,9 +120,9 @@ export default function QuoteForm() {
       </div>
       <button
         type="submit"
-        className="mt-2 inline-flex items-center justify-center gap-2 px-6 py-4 bg-orange-600 text-white text-base font-bold uppercase tracking-wider rounded-full hover:bg-orange-500 transition-all duration-200 shadow-xl shadow-orange-600/50 hover:shadow-2xl hover:shadow-orange-600/60 hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0.5 active:shadow-md ring-1 ring-orange-700/20"
+        className="mt-1 md:mt-2 inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm md:px-6 md:py-4 md:text-base bg-orange-600 text-white font-bold uppercase tracking-wider rounded-full hover:bg-orange-500 transition-all duration-200 shadow-xl shadow-orange-600/50 hover:shadow-2xl hover:shadow-orange-600/60 hover:-translate-y-1 hover:scale-[1.02] active:translate-y-0.5 active:shadow-md ring-1 ring-orange-700/20"
       >
-        Send Inquiry <span className="material-symbols-outlined text-xl">arrow_forward</span>
+        Send Inquiry <span className="material-symbols-outlined text-lg md:text-xl">arrow_forward</span>
       </button>
 
       <div role="status" aria-live="polite" className="min-h-[1.5rem]">

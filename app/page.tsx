@@ -10,6 +10,7 @@ import QuoteForm from "./components/QuoteForm";
 import ScrollParallax from "./components/ScrollParallax";
 import ProjectsCarousel from "./components/ProjectsCarousel";
 import SafeImage from "./components/SafeImage";
+import ClickTracker from "./components/ClickTracker";
 
 export default function Home() {
   return (
@@ -23,13 +24,14 @@ export default function Home() {
       <Header />
       <SmoothScroll />
       <RevealOnScroll />
+      <ClickTracker />
       <MessengerFab />
 
-      <main id="main" tabIndex={-1} className="pt-20 pb-24 md:pb-0 outline-none">
+      <main id="main" tabIndex={-1} className="pt-20 outline-none">
         {/* Hero */}
         <section
           id="home"
-          className="relative w-full min-h-[780px] md:min-h-[900px] flex items-start px-gutter py-section-padding bg-surface-container-lowest [overflow-x:clip]"
+          className="relative w-full min-h-[560px] md:min-h-[900px] flex items-start px-gutter py-section-padding bg-surface-container-lowest [overflow-x:clip]"
         >
           <div className="absolute inset-0 z-0">
             <HeroCover />
@@ -42,12 +44,12 @@ export default function Home() {
           </div>
           <div className="relative z-10 max-w-(--container-max) mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center w-full">
             <div className="lg:col-span-7 flex flex-col items-start gap-stack-lg">
-              <h1 className="text-[clamp(2.25rem,9vw,4.5rem)] lg:text-7xl font-display font-bold text-on-surface tracking-tight leading-tight break-words [text-shadow:0_0_14px_rgba(255,255,255,1),0_0_30px_rgba(255,255,255,1),0_0_48px_rgba(255,255,255,0.85),0_0_72px_rgba(255,255,255,0.6)]">
+              <h1 className="text-4xl md:text-[clamp(2.25rem,9vw,4.5rem)] lg:text-7xl font-display font-bold text-on-surface tracking-tight leading-tight break-words [text-shadow:0_0_14px_rgba(255,255,255,1),0_0_30px_rgba(255,255,255,1),0_0_48px_rgba(255,255,255,0.85),0_0_72px_rgba(255,255,255,0.6)]">
                 <span className="fade-up block" style={{ transitionDelay: "100ms" }}>You Dream It,</span>
                 <span className="fade-up block text-orange-600" style={{ transitionDelay: "350ms" }}>We Build It.</span>
               </h1>
               <p
-                className="fade-up text-lg text-on-surface-variant max-w-2xl leading-relaxed [text-shadow:0_0_14px_rgba(255,255,255,1),0_0_30px_rgba(255,255,255,1),0_0_48px_rgba(255,255,255,0.85),0_0_72px_rgba(255,255,255,0.6)]"
+                className="fade-up text-base md:text-lg text-on-surface-variant max-w-2xl leading-relaxed [text-shadow:0_0_14px_rgba(255,255,255,1),0_0_30px_rgba(255,255,255,1),0_0_48px_rgba(255,255,255,0.85),0_0_72px_rgba(255,255,255,0.6)]"
                 style={{ transitionDelay: "650ms" }}
               >
                 Your partner in generating free and clean energy solutions for your future. Save money, save the environment — with affordable
@@ -60,19 +62,19 @@ export default function Home() {
               </p>
               <div className="flex flex-wrap gap-stack-md pt-2">
                 <a
-                  className="inline-flex items-center justify-center px-8 py-4 bg-orange-600 text-white text-sm font-bold uppercase tracking-wider rounded-full hover:bg-orange-500 transition-all duration-200 shadow-xl shadow-orange-600/45 hover:shadow-2xl hover:shadow-orange-600/55 hover:-translate-y-1 active:translate-y-0.5 active:shadow-md"
+                  className="inline-flex items-center justify-center px-6 py-3 text-sm md:px-8 md:py-4 md:text-sm bg-orange-600 text-white font-bold uppercase tracking-wider rounded-full hover:bg-orange-500 transition-all duration-200 shadow-xl shadow-orange-600/45 hover:shadow-2xl hover:shadow-orange-600/55 hover:-translate-y-1 active:translate-y-0.5 active:shadow-md"
                   href="#quote"
                 >
                   Get a Free Quote
                 </a>
                 <a
-                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-secondary text-secondary bg-surface hover:bg-surface text-sm font-bold uppercase tracking-wider rounded-full transition-all duration-200 shadow-lg shadow-secondary/25 hover:shadow-xl hover:shadow-secondary/35 hover:-translate-y-1 active:translate-y-0.5 active:shadow-md"
+                  className="inline-flex items-center justify-center px-6 py-3 text-sm md:px-8 md:py-4 md:text-sm border-2 border-secondary text-secondary bg-surface hover:bg-surface font-bold uppercase tracking-wider rounded-full transition-all duration-200 shadow-lg shadow-secondary/25 hover:shadow-xl hover:shadow-secondary/35 hover:-translate-y-1 active:translate-y-0.5 active:shadow-md"
                   href="#services"
                 >
                   Explore Services
                 </a>
               </div>
-              <div className="flex flex-wrap items-center gap-6 pt-3 text-on-surface-variant [text-shadow:0_0_10px_rgba(255,255,255,0.95),0_0_22px_rgba(255,255,255,0.7),0_0_36px_rgba(255,255,255,0.5)]">
+              <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center md:gap-6 pt-3 text-on-surface-variant [text-shadow:0_0_10px_rgba(255,255,255,0.95),0_0_22px_rgba(255,255,255,0.7),0_0_36px_rgba(255,255,255,0.5)]">
                 <Trust icon="verified" label="Licensed installers"   animClass="trust-icon-spin" />
                 <Trust icon="savings"  label="Up to 70% bill cut"    animClass="trust-icon-bob" />
                 <Trust icon="shield"   label="25-year panel warranty" animClass="trust-icon-pulse" />
@@ -88,7 +90,7 @@ export default function Home() {
             width={2752}
             height={1322}
             sizes="100vw"
-            className="pointer-events-none absolute -bottom-[370px] md:-bottom-[370px] left-0 w-full h-auto z-20 select-none animate-bt-wipe"
+            className="pointer-events-none absolute -bottom-[100px] md:-bottom-[370px] left-0 w-full h-auto z-20 select-none animate-bt-wipe"
           />
         </section>
 
@@ -99,7 +101,7 @@ export default function Home() {
         <div className="relative bg-surface overflow-hidden">
           <ScrollParallax
             speed={0.25}
-            className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner5c.png')] bg-no-repeat bg-[length:min(100%,1920px)_auto] bg-[position:center_220px] md:bg-[position:center_320px] opacity-30"
+            className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner5c.png')] bg-no-repeat bg-[length:min(100%,1920px)_auto] bg-[position:center_400px] md:bg-[position:center_320px] opacity-30"
           >
             {null}
           </ScrollParallax>
@@ -107,11 +109,11 @@ export default function Home() {
           {/* Savings */}
           <section
             id="savings"
-            className="relative px-gutter py-section-padding bg-transparent"
+            className="relative px-gutter pt-2 pb-12 md:py-section-padding bg-transparent"
           >
             <div className="relative max-w-(--container-max) mx-auto">
               <SectionHeader float eyebrow="Savings" title="Energy independence, made affordable." subtitle="Solar isn't just clean — it's the smartest investment your roof will ever make." />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+              <div className="grid grid-cols-3 gap-3 md:gap-gutter">
                 <StatCard delay={0}   big="70%"     title="Lower electricity bills" body="Most homes cut their monthly Meralco bill by half or more after switching." />
                 <StatCard delay={150} big="4–6 yrs" title="Payback period"          body="Your system pays for itself in under six years, then runs free for two more decades." />
                 <StatCard delay={300} big="25+ yrs" title="Panel lifespan"          body="Tier-1 panels backed by manufacturer warranties of 25 years or more." />
@@ -120,10 +122,10 @@ export default function Home() {
           </section>
 
           {/* Services */}
-          <section id="services" className="relative px-gutter py-section-padding bg-transparent">
+          <section id="services" className="relative px-gutter pt-2 pb-12 md:py-section-padding bg-transparent">
           <div className="max-w-(--container-max) mx-auto">
             <SectionHeader eyebrow="Services" title="A full range of solar solutions." subtitle="From design and installation to long-term maintenance — reliable, high-quality service every step of the way." />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-gutter lg:grid-cols-4">
               <ServiceCard delay={0}   theme="primary"   icon="home"                  iconClass="icon-home"    title="Residential Solar"    body="Custom rooftop systems sized to your household's energy needs and budget." />
               <ServiceCard delay={150} theme="secondary" icon="storefront"            iconClass="icon-store"   title="Commercial Solar"     body="Scalable installations for offices, warehouses, and manufacturing sites." />
               <ServiceCard delay={300} theme="tertiary"  icon="battery_charging_full" iconClass="icon-battery" title="Battery Storage"      body="Hybrid and off-grid setups with lithium battery backup for 24/7 power." />
@@ -137,15 +139,15 @@ export default function Home() {
         <div className="relative bg-surface overflow-hidden">
           <ScrollParallax
             speed={0.25}
-            className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner5e.png')] bg-no-repeat bg-[length:min(100%,1920px)_auto] bg-[position:center_220px] md:bg-[position:center_320px] opacity-30"
+            className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner5e.png')] bg-no-repeat bg-[length:min(100%,1920px)_auto] bg-[position:center_400px] md:bg-[position:center_320px] opacity-30"
           >
             {null}
           </ScrollParallax>
 
           {/* Process */}
-          <section id="process" className="relative px-gutter py-section-padding bg-transparent">
+          <section id="process" className="relative px-gutter pt-2 pb-12 md:py-section-padding bg-transparent">
             <div className="max-w-(--container-max) mx-auto">
-              <SectionHeader eyebrow="Process" title="From consult to switch-on" subtitle="A clear, four-step process — no surprises, no shortcuts." />
+              <SectionHeader eyebrow="Process" title="From consult to switch-on" subtitle="" />
               <div className="grid grid-cols-1 md:grid-cols-4 gap-gutter">
                 <Step n={1} title="Free Consultation" body="We assess your bill, roof, and energy goals at no cost." />
                 <Step n={2} title="Custom Design" body="Engineered system layout with projected savings and ROI." />
@@ -156,7 +158,7 @@ export default function Home() {
           </section>
 
           {/* Featured Projects */}
-          <section id="installations" className="relative px-gutter py-section-padding bg-transparent">
+          <section id="installations" className="relative px-gutter pt-2 pb-12 md:py-section-padding bg-transparent">
             <div className="max-w-(--container-max) mx-auto">
               <SectionHeader
                 eyebrow="Recent Works"
@@ -173,7 +175,7 @@ export default function Home() {
         </div>
 
         {/* Estimate */}
-        <section id="estimate" className="relative px-gutter py-section-padding bg-surface overflow-hidden">
+        <section id="estimate" className="relative px-gutter pt-2 pb-12 md:py-section-padding bg-surface overflow-hidden">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 bottom-32 md:bottom-48 z-0 select-none opacity-30"
@@ -203,19 +205,19 @@ export default function Home() {
         </section>
 
         {/* Quote / Contact */}
-        <section id="quote" className="relative px-gutter py-section-padding bg-surface overflow-hidden">
+        <section id="quote" className="relative px-gutter pt-2 pb-12 md:py-section-padding bg-surface overflow-hidden">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[url('/banner4.png')] bg-no-repeat bg-[length:min(100%,1920px)_auto] bg-[position:center_220px] md:bg-[position:center_320px] opacity-30"
           />
-          <div className="relative max-w-(--container-max) mx-auto grid grid-cols-1 lg:grid-cols-2 gap-margin items-start">
+          <div className="relative max-w-(--container-max) mx-auto grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-margin items-start">
             <div className="fade-up" id="contact">
-              <span className="text-sm font-bold uppercase tracking-wider text-primary">Get a Free Quote</span>
-              <h2 className="text-3xl md:text-5xl font-display font-semibold text-on-surface mt-2">Let&apos;s power your future.</h2>
-              <p className="text-lg text-on-surface-variant mt-4 leading-relaxed">
+              <span className="text-xs md:text-sm font-bold uppercase tracking-wider text-primary">Get a Free Quote</span>
+              <h2 className="text-2xl md:text-5xl font-display font-semibold text-on-surface mt-1 md:mt-2">Let&apos;s power your future.</h2>
+              <p className="text-sm md:text-lg text-on-surface-variant mt-2 md:mt-4 leading-snug md:leading-relaxed">
                 Tell us a bit about your home or business and we&apos;ll get back to you within one business day with a no-obligation estimate.
               </p>
-              <div className="mt-8 flex flex-col gap-stack-md">
+              <div className="mt-3 md:mt-8 flex flex-col gap-2 md:gap-stack-md">
                 <ContactRow icon="call" label="Call us" lines={["+63 960 436 5857", "+63 962 773 3258"]} href="tel:+639604365857" />
                 <ContactRow icon="mail" label="Email" lines={["blazetech.dev@gmail.com"]} href="mailto:blazetech.dev@gmail.com" />
                 <ContactRow icon="location_on" label="Visit" lines={["Sindalan, San Fernando, Pampanga"]} href="https://maps.app.goo.gl/usQJphX8pxcgraCr8" />
@@ -329,7 +331,7 @@ function SectionHeader({
       <span className="text-sm font-bold uppercase tracking-wider text-primary">{eyebrow}</span>
       <div className={float ? "bt-float-soft" : undefined}>
         <h2
-          className={`text-3xl md:text-5xl font-display font-semibold text-on-surface mt-2 ${
+          className={`text-[1.7rem] md:text-5xl font-display font-semibold text-on-surface mt-2 ${
             float ? "[text-shadow:0_2px_4px_rgba(0,0,0,0.18),0_8px_20px_rgba(0,0,0,0.14)]" : ""
           }`}
         >
@@ -337,7 +339,7 @@ function SectionHeader({
         </h2>
         {subtitle && (
           <p
-            className={`text-lg text-on-surface-variant mx-auto mt-4 ${wide ? "max-w-none" : "max-w-2xl"} ${
+            className={`text-base md:text-lg text-on-surface-variant mx-auto mt-4 ${wide ? "max-w-none" : "max-w-2xl"} ${
               float ? "[text-shadow:0_1px_3px_rgba(0,0,0,0.16),0_4px_10px_rgba(0,0,0,0.10)]" : ""
             }`}
           >
@@ -352,12 +354,12 @@ function SectionHeader({
 function StatCard({ big, title, body, delay = 0 }: { big: string; title: string; body: string; delay?: number }) {
   return (
     <div
-      className="fade-up bt-stat-card bg-surface-container-lowest rounded-xl p-8 shadow-sm border border-surface-container-high"
+      className="fade-up bt-stat-card bg-surface-container-lowest rounded-xl p-3 md:p-8 shadow-sm border border-surface-container-high"
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
-      <div className="text-5xl md:text-6xl font-display font-bold text-emerald-700">{big}</div>
-      <h3 className="text-2xl font-display font-semibold text-on-surface mt-3">{title}</h3>
-      <p className="text-on-surface-variant mt-2">{body}</p>
+      <div className="text-2xl md:text-5xl lg:text-6xl font-display font-bold text-emerald-700 leading-none">{big}</div>
+      <h3 className="text-xs md:text-2xl font-display font-semibold text-on-surface mt-2 md:mt-3">{title}</h3>
+      <p className="text-[10px] md:text-base text-on-surface-variant mt-1 md:mt-2 leading-snug">{body}</p>
     </div>
   );
 }
@@ -429,15 +431,15 @@ function ServiceCard({
   const t = SERVICE_THEMES[theme];
   return (
     <div
-      className={`group fade-up bt-card-lift relative overflow-hidden bg-surface rounded-xl p-6 shadow-sm border border-surface-container-high ${t.hoverBorder}`}
+      className={`group fade-up bt-card-lift relative overflow-hidden bg-surface rounded-xl p-3 md:p-6 shadow-sm border border-surface-container-high ${t.hoverBorder}`}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
       <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1 ${t.topAccent}`} />
-      <div className={`w-12 h-12 rounded-lg ${t.iconBg} ${t.iconText} flex items-center justify-center mb-4 ${t.hoverIconBg} ${t.hoverIconText} transition-colors duration-300`}>
-        <span className={`material-symbols-outlined service-icon ${iconClass ?? ""}`}>{icon}</span>
+      <div className={`w-9 h-9 md:w-12 md:h-12 rounded-lg ${t.iconBg} ${t.iconText} flex items-center justify-center mb-2 md:mb-4 ${t.hoverIconBg} ${t.hoverIconText} transition-colors duration-300`}>
+        <span className={`material-symbols-outlined service-icon text-lg md:text-2xl ${iconClass ?? ""}`}>{icon}</span>
       </div>
-      <h3 className="text-xl font-display font-semibold text-on-surface">{title}</h3>
-      <p className="text-on-surface-variant mt-2">{body}</p>
+      <h3 className="text-sm md:text-xl font-display font-semibold text-on-surface leading-snug">{title}</h3>
+      <p className="text-[11px] md:text-base text-on-surface-variant mt-1 md:mt-2 leading-snug">{body}</p>
     </div>
   );
 }
@@ -584,13 +586,16 @@ function ProjectCard({ project }: { project: Project }) {
 function ContactRow({ icon, label, lines, href }: { icon: string; label: string; lines: string[]; href?: string }) {
   const inner = (
     <>
-      <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-        <span className="material-symbols-outlined">{icon}</span>
+      <div className="w-9 h-9 md:w-12 md:h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+        <span className="material-symbols-outlined text-lg md:text-2xl">{icon}</span>
       </div>
-      <div>
-        <div className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">{label}</div>
+      <div className="min-w-0">
+        <div className="text-[10px] md:text-sm font-bold uppercase tracking-wider text-on-surface-variant leading-tight">{label}</div>
         {lines.map((l, i) => (
-          <div key={l} className={i === 0 ? "font-bold text-on-surface" : "text-on-surface-variant"}>
+          <div
+            key={l}
+            className={`text-xs md:text-base ${i === 0 ? "font-bold text-on-surface" : "text-on-surface-variant"}`}
+          >
             {l}
           </div>
         ))}
@@ -598,7 +603,7 @@ function ContactRow({ icon, label, lines, href }: { icon: string; label: string;
     </>
   );
   const cls =
-    "flex items-center gap-4 p-4 rounded-xl border border-white/40 bg-white/55 backdrop-blur-md shadow-sm shadow-black/5 " +
+    "flex items-center gap-2.5 md:gap-4 p-2.5 md:p-4 rounded-xl border border-white/40 bg-white/55 backdrop-blur-md shadow-sm shadow-black/5 " +
     (href ? "hover:border-primary/50 hover:bg-white/75 hover:shadow-md transition-all duration-200" : "");
   return href ? (
     <a
