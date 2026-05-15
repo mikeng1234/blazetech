@@ -52,13 +52,25 @@ const THEMES: Record<string, Theme> = {
     check: "text-tertiary",
     hoverBorder: "hover:border-tertiary/40",
   },
+  violet: {
+    border: "border-violet-600",
+    bgTint: "bg-violet-600/5",
+    shadow: "shadow-violet-600/20",
+    iconBg: "bg-violet-600/10",
+    iconText: "text-violet-600",
+    iconBgActive: "bg-violet-600",
+    iconTextActive: "text-white",
+    check: "text-violet-600",
+    hoverBorder: "hover:border-violet-600/40",
+  },
 };
 
 const SYSTEM_TYPES = {
   "grid-tie": {
     label: "Grid-Tie",
+    badgeLabel: "Grid-Tie",
     icon: "bolt",
-    blurb: "Sells back to the grid. The most affordable way to start saving.",
+    blurb: "Feeds excess power back to the grid. The most affordable entry into solar.",
     pros: ["Lowest upfront cost", "Net-metering ready", "Simplest install"],
     costLow: 55_000,
     costHigh: 70_000,
@@ -66,8 +78,9 @@ const SYSTEM_TYPES = {
   },
   hybrid: {
     label: "Hybrid",
+    badgeLabel: "Hybrid",
     icon: "battery_charging_full",
-    blurb: "Solar plus battery. Keeps powering essentials when the grid goes down.",
+    blurb: "Solar with battery backup. Keeps essentials running when the grid goes out.",
     pros: ["Backup during outages", "Use solar at night", "Net-metering compatible"],
     costLow: 80_000,
     costHigh: 110_000,
@@ -75,12 +88,23 @@ const SYSTEM_TYPES = {
   },
   "off-grid": {
     label: "Off-Grid",
+    badgeLabel: "Off-Grid",
     icon: "power",
-    blurb: "Fully independent system. No utility connection needed.",
+    blurb: "Fully independent from the grid. No utility connection or monthly bill needed.",
     pros: ["100% energy independence", "Ideal for remote sites", "Zero monthly bill"],
     costLow: 110_000,
     costHigh: 150_000,
     theme: "tertiary",
+  },
+  "micro-inverter": {
+    label: "Micro Inverter",
+    badgeLabel: "Micro",
+    icon: "hub",
+    blurb: "European micro inverters per panel. Maximum yield, 25-year warranty, battery-ready.",
+    pros: ["25-year warranty", "Battery ready", "European brand"],
+    costLow: 150_000,
+    costHigh: 200_000,
+    theme: "violet",
   },
 } as const;
 
@@ -132,7 +156,7 @@ export default function Estimator() {
           <span className="text-sm font-bold uppercase tracking-wider text-on-surface-variant">System Type</span>
           <span className="text-xs text-on-surface-variant">Pricing varies by configuration</span>
         </div>
-        <div className="grid grid-cols-3 gap-2 md:gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
           {(Object.keys(SYSTEM_TYPES) as SystemType[]).map((key) => {
             const opt = SYSTEM_TYPES[key];
             const t = THEMES[opt.theme];
@@ -149,22 +173,22 @@ export default function Estimator() {
                     : `border-surface-container-high bg-surface ${t.hoverBorder} hover:shadow-md`
                 }`}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 min-h-[2.25rem]">
                   <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+                    className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
                       active ? `${t.iconBgActive} ${t.iconTextActive}` : `${t.iconBg} ${t.iconText}`
                     }`}
                   >
                     <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>{opt.icon}</span>
                   </div>
-                  <div className="font-display font-semibold text-on-surface text-xs md:text-base leading-tight">{opt.label}</div>
+                  <div className="font-display font-semibold text-on-surface text-xs md:text-sm leading-tight">{opt.label}</div>
                   {active && (
-                    <span className={`ml-auto material-symbols-outlined ${t.check}`} style={{ fontVariationSettings: "'FILL' 1", fontSize: "20px" }}>
+                    <span className={`ml-auto shrink-0 material-symbols-outlined ${t.check}`} style={{ fontVariationSettings: "'FILL' 1", fontSize: "20px" }}>
                       check_circle
                     </span>
                   )}
                 </div>
-                <p className="hidden md:block text-sm text-on-surface-variant mt-2">{opt.blurb}</p>
+                <p className="hidden md:block text-sm text-on-surface-variant mt-2 min-h-[3.5rem]">{opt.blurb}</p>
                 <ul className="mt-2 hidden md:flex flex-col gap-1">
                   {opt.pros.map((pro) => (
                     <li key={pro} className="flex items-start gap-2 text-sm text-on-surface">
@@ -338,7 +362,7 @@ export default function Estimator() {
             <div className="text-[11px] md:text-sm font-bold uppercase tracking-wider opacity-80 leading-tight">Estimated Installation Cost</div>
             <div className="inline-flex items-center gap-1 md:gap-1.5 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-white/15 text-[10px] md:text-xs font-bold uppercase tracking-wider">
               <span className="material-symbols-outlined text-xs md:text-sm">{sys.icon}</span>
-              {sys.label}
+              {sys.badgeLabel}
             </div>
           </div>
           <div className="text-lg md:text-3xl font-display font-bold leading-tight">

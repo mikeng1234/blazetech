@@ -13,7 +13,9 @@ type Status =
 
 export default function QuoteForm() {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const [toast, setToast] = useState(false);
   const fallbackTimer = useRef<number | null>(null);
+  const toastTimer = useRef<number | null>(null);
 
   function buildMessageText(data: FormData) {
     return (
@@ -41,6 +43,11 @@ export default function QuoteForm() {
       bill: String(data.get("bill") ?? ""),
       message: String(data.get("message") ?? "").slice(0, 500),
     });
+
+    // Show "Inquiry submitted" toast for 3.5s.
+    if (toastTimer.current) window.clearTimeout(toastTimer.current);
+    setToast(true);
+    toastTimer.current = window.setTimeout(() => setToast(false), 3500);
 
     // If a mail handler exists, the page loses focus / becomes hidden once
     // it opens. If neither happens within ~1.5s, assume mailto failed and
@@ -163,6 +170,19 @@ export default function QuoteForm() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Inquiry submitted toast — fixed bottom-center, fades in/out */}
+      <div
+        aria-live="polite"
+        className={`fixed left-1/2 -translate-x-1/2 z-[60] pointer-events-none transition-all duration-300 ease-out ${
+          toast ? "bottom-6 opacity-100" : "bottom-2 opacity-0"
+        }`}
+      >
+        <div className="inline-flex items-center gap-2 rounded-full bg-emerald-600 text-white px-4 py-2.5 text-sm font-bold shadow-xl shadow-emerald-600/40 ring-1 ring-emerald-700/30">
+          <span className="material-symbols-outlined text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+          Inquiry submitted
+        </div>
       </div>
     </form>
   );

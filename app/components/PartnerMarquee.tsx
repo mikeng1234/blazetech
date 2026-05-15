@@ -4,14 +4,14 @@ import ScrollParallax from "./ScrollParallax";
 
 const partners = [
   { src: "/partners/canadian solar.png", alt: "Canadian Solar" },
-  { src: "/partners/longi.png", alt: "LONGi" },
-  { src: "/partners/trinasolar.png", alt: "Trina Solar" },
-  { src: "/partners/seraphim.png", alt: "Seraphim" },
-  { src: "/partners/fronius.png", alt: "Fronius" },
-  { src: "/partners/deye.png", alt: "Deye" },
-  { src: "/partners/luxpower.png", alt: "LuxPower" },
-  { src: "/partners/afore.png", alt: "Afore" },
-  { src: "/partners/enphase.png", alt: "Enphase" },
+  { src: "/partners/longi.png",          alt: "LONGi" },
+  { src: "/partners/seraphim.png",       alt: "Seraphim" },
+  { src: "/partners/jinko solar.png",    alt: "Jinko Solar" },
+  { src: "/partners/deye.png",           alt: "Deye" },
+  { src: "/partners/sungrow.webp",       alt: "Sungrow" },
+  { src: "/partners/luxpower.png",       alt: "LuxPower" },
+  { src: "/partners/atmoce.png",         alt: "Atmoce" },
+  { src: "/partners/enphase.png",        alt: "Enphase" },
 ];
 
 export default function PartnerMarquee() {

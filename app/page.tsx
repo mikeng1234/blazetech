@@ -76,8 +76,8 @@ export default function Home() {
               </div>
               <div className="flex flex-col gap-3 md:flex-row md:flex-wrap md:items-center md:gap-6 pt-3 text-on-surface-variant [text-shadow:0_0_10px_rgba(255,255,255,0.95),0_0_22px_rgba(255,255,255,0.7),0_0_36px_rgba(255,255,255,0.5)]">
                 <Trust icon="verified" label="Licensed installers"   animClass="trust-icon-spin" />
-                <Trust icon="savings"  label="Up to 70% bill cut"    animClass="trust-icon-bob" />
-                <Trust icon="shield"   label="25-year panel warranty" animClass="trust-icon-pulse" />
+                <Trust icon="savings"  label="Up to 100% bill cut"                   animClass="trust-icon-bob" />
+                <Trust icon="shield"   label="25-year warranty on selected brands" animClass="trust-icon-pulse" />
               </div>
             </div>
           </div>
@@ -114,8 +114,8 @@ export default function Home() {
             <div className="relative max-w-(--container-max) mx-auto">
               <SectionHeader float eyebrow="Savings" title="Energy independence, made affordable." subtitle="Solar isn't just clean — it's the smartest investment your roof will ever make." />
               <div className="grid grid-cols-3 gap-3 md:gap-gutter">
-                <StatCard delay={0}   big="70%"     title="Lower electricity bills" body="Most homes cut their monthly Meralco bill by half or more after switching." />
-                <StatCard delay={150} big="4–6 yrs" title="Payback period"          body="Your system pays for itself in under six years, then runs free for two more decades." />
+                <StatCard delay={0}   big="100%"    title="Lower electricity bills" body="Go fully off-grid or net-zero — eliminate your Meralco bill entirely with the right system." />
+                <StatCard delay={150} big="2–4 yrs" title="Payback period"          body="Your system pays for itself in as little as two years, then runs free for two more decades." />
                 <StatCard delay={300} big="25+ yrs" title="Panel lifespan"          body="Tier-1 panels backed by manufacturer warranties of 25 years or more." />
               </div>
             </div>
